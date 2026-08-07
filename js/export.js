@@ -10,7 +10,7 @@
 
 const PolicyExport = (function () {
   function filenameBase() {
-    const name = (AppState.get().practiceName || "policy").trim();
+    const name = (AppState.get().practiceName+"_AI-Policy" || "policy").trim();
     return name.replace(/[^a-z0-9]+/gi, "_").replace(/^_+|_+$/g, "") || "policy";
   }
 
