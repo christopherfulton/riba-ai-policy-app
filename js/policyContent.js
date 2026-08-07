@@ -476,7 +476,6 @@ const POLICY_BLOCKS = [
   {
     id: "humanOversight",
     type: "static",
-    pageBreak: true,
     guidanceText: "",
     render: () =>
       `<h2>Human Oversight</h2>
@@ -569,7 +568,6 @@ const POLICY_BLOCKS = [
   {
     id: "dataGovernance",
     type: "choice",
-    pageBreak: true,
     field: "dataTransparencyOption",
     guidanceTitle: "Client data transparency",
     guidanceText:
@@ -637,7 +635,6 @@ const POLICY_BLOCKS = [
   {
     id: "legalCompliance",
     type: "static",
-    pageBreak: true,
     guidanceText: "",
     render: (s) =>
       `<h2>Legal and Regulatory Compliance</h2>
@@ -706,7 +703,6 @@ const POLICY_BLOCKS = [
   {
     id: "reliabilityStatic",
     type: "static",
-    pageBreak: true,
     guidanceText: "",
     render: () =>
       `<h2>Reliability, Hallucination and Sycophancy</h2>
