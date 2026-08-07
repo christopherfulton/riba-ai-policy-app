@@ -1,0 +1,323 @@
+/* Minimal styling: just enough to position things clearly, desktop only. */
+
+body {
+  margin: 0;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 16px;
+  color: #000;
+  background: #fff;
+}
+
+/* ---------- Header bar ---------- */
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 20px;
+  background: #f2f2f2;
+  border-bottom: 2px solid #333;
+}
+
+header h1 {
+  font-size: 18px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+header .actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+header button {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  padding: 6px 12px;
+  border: 1px solid #333;
+  background: #fff;
+  cursor: pointer;
+}
+
+header button:hover {
+  background: #e6e6e6;
+}
+
+/* ---------- Two-column layout ---------- */
+
+#app-body {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 30px;
+  padding: 16px 0;
+  border-bottom: 0px solid #ddd;
+}
+
+#policy-logo {
+  border-bottom: 1px solid grey;
+}
+
+.policy-cell {
+  padding-right: 10px;
+}
+
+.policy-cell h1 {
+  font-size: 24px;
+  margin: 20px 0 4px 0;
+}
+
+.policy-cell h2 {
+  font-size: 18px;
+  margin: 50px 0 10px 0;
+  font-weight: normal;
+  border-bottom: 1px solid rgb(86, 86, 86);
+}
+
+.policy-cell h3 {
+  font-size: 16px;
+  margin: 0 0 8px 0;
+}
+
+.policy-cell p {
+  margin: 0 0 10px 0;
+  line-height: 1.5;
+}
+
+.policy-cell ul {
+  margin: 0 0 10px 0;
+  padding-left: 22px;
+  line-height: 1.5;
+}
+
+.policy-logo {
+  display: block;
+  height: 75px;
+  width: auto;
+  margin: 0 0 12px 0;
+}
+
+.page-break {
+  page-break-before: always;
+}
+
+.pdf-export h2
+{
+  margin: 45px 0 10px 0;
+  border-bottom: 1px solid rgb(86, 86, 86);
+}
+
+/* ---------- Guidance / control column ---------- */
+
+.guidance-cell {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  color: #333;
+  background: none;
+  border-left: 1px solid #e0e0e0;
+  padding: 12px 14px;
+}
+
+.guidance-title {
+  font-weight: bold;
+  margin: 0 0 4px 0;
+}
+
+.guidance-text {
+  margin: 0 0 10px 0;
+  color: #555;
+}
+
+.control label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.control input[type="text"],
+.control textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  padding: 6px;
+  border: 1px solid #999;
+  margin-bottom: 4px;
+}
+
+.control .radio-label,
+.control .checkbox-label {
+  display: block;
+  font-weight: normal;
+  margin-bottom: 6px;
+}
+
+.control .radio-label input,
+.control .checkbox-label input {
+  margin-right: 6px;
+}
+
+.image-file-input {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.image-preview {
+  margin-top: 6px;
+}
+
+.image-preview img {
+  display: block;
+  max-height: 60px;
+  width: auto;
+  margin-bottom: 6px;
+  border: 1px solid #ccc;
+}
+
+.remove-image {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  border: 1px solid #999;
+  background: #fff;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.remove-image:hover {
+  background: #fbe4e4;
+  border-color: #a00;
+  color: #a00;
+}
+
+/* A field made of radios/checkboxes rather than a single <label>+<input>
+   pair (yesno, multiOther, choiceText) - .field-label stands in for the
+   bold <label> heading used elsewhere. */
+
+.field-block {
+  margin-bottom: 10px;
+}
+
+.field-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.field-block input[type="text"] {
+  margin-top: 4px;
+}
+
+.radio-label.inline {
+  display: inline-block;
+  margin-right: 16px;
+}
+
+/* Checkboxes-with-a-detail-box control (ethical dimensions) */
+
+.ethical-option {
+  margin-bottom: 8px;
+}
+
+.ethical-option textarea {
+  margin-top: 4px;
+}
+
+/* Permitted Use register: one card per entry */
+
+.entry-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.entry-card {
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 10px 12px;
+}
+
+.entry-fields {
+  display: flex;
+  flex-direction: column;
+}
+
+.entry-field {
+  margin-bottom: 8px;
+}
+
+.entry-card .remove-row {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  border: 1px solid #999;
+  background: #fff;
+  cursor: pointer;
+  padding: 4px 8px;
+  margin-top: 4px;
+}
+
+.entry-card .remove-row:hover {
+  background: #fbe4e4;
+  border-color: #a00;
+  color: #a00;
+}
+
+.add-row {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  padding: 6px 10px;
+  border: 1px solid #333;
+  background: #fff;
+  cursor: pointer;
+}
+
+.add-row:hover {
+  background: #e6e6e6;
+}
+
+/* Permitted Use register: how each entry appears in the policy text */
+
+.permitted-entry {
+  border-top: 1px solid #ccc;
+  padding-top: 8px;
+  margin-top: 8px;
+}
+
+.permitted-entry h4 {
+  font-size: 15px;
+  margin: 0 0 6px 0;
+}
+
+.permitted-entry p {
+  margin: 0 0 4px 0;
+  font-size: 0.8em;
+}
+
+.permitted-entry-table {
+  font-size: 0.8em;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.permitted-entry-table tr
+{
+  border-bottom: 1px solid grey;
+  padding: 3px 0px;
+}
+
+.permitted-entry-table td, .permitted-entry-table th
+{
+  padding: 6px 9px;
+  text-align: left;
+}
