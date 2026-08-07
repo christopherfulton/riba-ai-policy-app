@@ -526,6 +526,7 @@ const POLICY_BLOCKS = [
   {
     id: "cognitiveOffloading",
     type: "multiOther",
+    pageBreak: true,
     field: "cognitiveOffloadingMethods",
     otherField: "cognitiveOffloadingOther",
     otherLabel: "Other",
@@ -568,6 +569,7 @@ const POLICY_BLOCKS = [
   {
     id: "dataGovernance",
     type: "choice",
+    pageBreak: true,
     field: "dataTransparencyOption",
     guidanceTitle: "Client data transparency",
     guidanceText:
@@ -682,6 +684,7 @@ const POLICY_BLOCKS = [
   {
     id: "fairnessBias",
     type: "static",
+    pageBreak: true,
     guidanceText: "",
     render: () =>
       `<h2>Fairness, Bias and Equality</h2>
