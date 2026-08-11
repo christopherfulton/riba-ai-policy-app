@@ -11,6 +11,10 @@
  * that returns the HTML to show on the left, given the current
  * answers (`state`). Use `esc()` to safely insert user-typed text.
  *
+ * Shared utility functions (esc, yesNoText, rp, blankRowFor) that
+ * operate on the user's answers live in policyHelpers.js, loaded
+ * before this file - keeping this file focused on wording/options.
+ *
  * A few passages in the source document referred to "Page 1" / "page 2"
  * (paper pagination that doesn't apply to this single scrolling page).
  * Where that happened, the Responsible Person's actual name is
@@ -26,8 +30,6 @@
  *   "choiceText"       - radio buttons where some options reveal a text box
  *   "multi"            - checkboxes: pick ANY NUMBER of clauses
  *   "multiOther"       - checkboxes plus an "Other" box that reveals free text
- *   "multiWithDetails" - checkboxes where ticking one reveals its own
- *                        free-text box (used for the ethical dimensions)
  *   "image"            - file picker for an image, resized client-side to a
  *                        fixed height (canvas + data: URL, never uploaded
  *                        anywhere) - used for the practice logo
@@ -42,48 +44,14 @@
  * ------------------------------------------------------------------
  */
 
-// Escape user-entered text before dropping it into HTML.
-function esc(str) {
-  return String(str ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-function yesNoText(value) {
-  if (value === "yes") return "Yes";
-  if (value === "no") return "No";
-  return "[Not yet answered]";
-}
-
-// Shorthand for "the Responsible Person's name, or a placeholder".
-function rp(s) {
-  return esc(s.responsiblePerson) || "[Responsible Person]";
-}
-
-// Builds a blank data row for a "list" block, based on its entryFields.
-function blankRowFor(block) {
-  const row = {};
-  block.entryFields.forEach((fd) => {
-    switch (fd.type) {
-      case "checkbox":
-        row[fd.key] = false;
-        break;
-      case "multiOther":
-        row[fd.key] = [];
-        row[fd.otherKey] = "";
-        break;
-      case "choiceText":
-        row[fd.key] = "";
-        row[fd.textKey] = "";
-        break;
-      default: // text, textarea, yesno
-        row[fd.key] = "";
-    }
-  });
-  return row;
-}
+// ------------------------------------------------------------------
+// OPTIONS - the checkbox/radio choices offered for each of these
+// questions. To change what a user can pick from (add, remove, reword
+// an option), edit the relevant list below. Each option's `value` is
+// the bit stored in state/saved links, so renaming a `value` on an
+// option that's already in use will orphan any previously-ticked
+// answers - change `label` freely, but treat `value` as fixed once used.
+// ------------------------------------------------------------------
 
 const ETHICAL_DIMENSION_OPTIONS = [
   { value: "environmental", label: "Environmental and sustainability issues" },
@@ -137,7 +105,7 @@ const IP_MITIGATION_OPTIONS = [
   },
   {
     value: "agreedTos",
-    label: "explicitly agree commercial use with all our AI service provider(s) and this included in signed Terms of Service which includes indemnity against copyright claims.",
+    label: "explicitly agree commercial use with all our AI service provider(s), with signed Terms of Service which includes indemnity against copyright claims.",
   },
   {
     value: "reverseImageCheck",
@@ -223,6 +191,8 @@ const DEFAULT_STATE = {
   clientOptOutClause: false,
   clientCommunicationTextEnabled: false,
   clientCommunicationText: "",
+  reviewAndChangeChoice: "", // "responsiblePerson" | "team" | "itHelpdesk" | "other"
+  reviewAndChangeText: "",
   permittedUses: [], // rich entries shaped by PERMITTED_USE_FIELDS
 };
 
@@ -294,8 +264,9 @@ const POLICY_BLOCKS = [
     label: "Practice logo (optional)",
     guidanceTitle: "Practice logo",
     guidanceText:
-      "Upload an image from your computer. It stays entirely in your browser and is automatically resized to 75px tall. " +
-      "Note: the logo is not included in the \"Bookmark your progress\" link - it will need to be re-uploaded after opening a bookmarked/pasted link.",
+      `Upload an image from your computer. It stays entirely in your browser and is automatically resized to 75px tall.
+      <br/>Note: the logo is not included in the \"Bookmark your progress\" link - it will need to be re-uploaded after opening a bookmarked/pasted link.
+      `,
     render: (s) => (s.logoDataUrl ? `<img class="policy-logo" src="${s.logoDataUrl}" alt="Practice logo">` : ""),
   },
   {
@@ -304,6 +275,14 @@ const POLICY_BLOCKS = [
     guidanceTitle: "Guidance and input for completing this Policy Template appears on this side of the page.",
     guidanceText:
       `The contents of this template policy builder stays locally in your browser, rather than being uploaded anywhere on the internet.
+      <br/><br/>
+      <div style="padding: 10px; border: 1px solid red;">
+      <strong>The wording of this policy is suggested, not mandatory, and you are permitted to change or adapt if you see fit for your practice. 
+      However, it does form a robust starting point; you can download a Word document version to further edit if you prefer.</strong>
+      <br/><br/>
+      It is hoped that the contents and guidance prove useful; it has been written and reviewed by those with expertise in AI technology, research, and practice leadership. 
+      <br/><br/>
+      We do recommend seeking input from your professional advisor on all practice policies.</div>
       `,
     render: () => `<h1>Artificial Intelligence Policy</h1>`,
   },
@@ -476,13 +455,34 @@ const POLICY_BLOCKS = [
   {
     id: "humanOversight",
     type: "static",
-    guidanceText: "",
+    guidanceText: `"Checking and reviewing output" is a requirement that appears a number of times in this policy template.
+    <br/><br/>
+    In practice, this means three increasingly rigorous tiers of actually doing a review, which should be evaluated based on the nature and criticality of the output:
+    <br/><br/>
+    1. Reading the AI output diligently and with a "critical eye" (but in isolation) to catch inaccuracies, unwanted content or hallucinations;
+    <br/><br/>
+    2. Tracing any references provided back to find actual source material, to verify that the reference says what the output claims;
+    <br/><br/>
+    3. To capture errors of omission (where the AI output did not contain an important piece of information that would have been necessary), the only option 
+    is to trace information directly from a primary source, or wide set of sources. It's worth noting here that the only logical method for avoiding such errors of omission means 
+    doing significant research yourself, without the AI.
+    <br/><br/>
+    <strong>A successful implementation of this requirement will involve creating a culture where staff feel 
+    confident overruling or checking an AI-generated output, and no-one worries that they may be penalised for doing so.</strong>`,
     render: () =>
       `<h2>Human Oversight</h2>
       <p>Human oversight in the form of content review and quality check must be applied to all AI-generated
       outputs, including those embedded within familiar tools such as web search, word processing or email
       applications. Individuals in our practice must apply their skill, knowledge and expertise to assess
-      whether they are suitable for the intended use and do not contain unacceptable errors or inaccuracies.</p>
+      whether they are suitable for the intended use and do not contain unacceptable errors, inaccuracies or omissions.</p>
+      <p>Practically, a review may comprise some or all of the following:</p>
+      <ul>
+        <li>Critically reading AI generated output to catch inaccuracies/inconsistences/unwanted content/hallucinations.</li>
+        <li>Tracing any provided references back to source material, to verify the reference says what the AI output claims.</li>
+        <li>[Most onerous] Capturing and correcting "errors of omission" where the AI ouput does <strong>not</strong> contain a 
+        piece of information that should have been included. This
+        can only be done by manual source material research.</li>
+      </ul>
       <p>Professional judgement always takes precedence over any AI-generated output.</p>
       <p>We never share AI-generated outputs outside the practice without prior internal review and
       oversight.</p>`,
@@ -900,9 +900,48 @@ const POLICY_BLOCKS = [
       </ul>`,
   },
   {
+    id: "reviewAndChange",
+    type: "choiceText",
+    pageBreak: true,
+    field: "reviewAndChangeChoice",
+    textField: "reviewAndChangeText",
+    textPlaceholder: "Enter the name of the team or person to contact",
+    hideTextFor: ["responsiblePerson", "itHelpdesk"],
+    guidanceTitle: "Changes or additions to Permitted Use",
+    guidanceText: "Select who can review/change this Policy - they should also receive requests for tools/services to be added to the Permitted Use list",
+    options: [
+      { value: "responsiblePerson", label: "Responsible Person" },
+      { value: "team", label: "Specific internal team" },
+      { value: "itHelpdesk", label: "IT Helpdesk" },
+      { value: "other", label: "Other" },
+    ],
+    render: (s) => {
+      const block = POLICY_BLOCKS_SELF().find((b) => b.id === "reviewAndChange");
+      const opt = PICK(block.options, s.reviewAndChangeChoice);
+      let channelText = "[Not yet selected]";
+      if (opt) {
+        channelText =
+          opt.value === "responsiblePerson"
+            ? rp(s)
+            : opt.value === "itHelpdesk"
+            ? "the IT Helpdesk"
+            : s.reviewAndChangeChoice
+            ? esc(s.reviewAndChangeChoice)
+            : `[${opt.label} - not yet specified]`;
+      }
+      return `
+        <h2>Reviews of, and changes to, this Policy</h2>
+        <p>If you have a request for an AI service/tool to be added or removed from the Permitted Use list (below), you should contact
+        <strong>${channelText}</strong> in the first instance.</p>
+        <p>AI services and tools should always be evaluated/tested in restricted pilot/sandbox environments before any implementation/rollout - plan ahead for the time this takes to set up.</p>
+        <p>The Responsible Person (${rp(s)}) is ultimately responsible for approval or restriction of AI services/tools (see below).</p>
+        <p>This Policy should be reviewed at a regular cadence, and dates and records of changes kept.</p>
+        `;
+    },
+  },
+  {
     id: "permittedUseIntro",
     type: "static",
-    pageBreak: true,
     guidanceText:
       `If no generative AI technologies' benefits are considered to outweigh their risks, 
       or all are ruled out by ethical or other concerns, then the register below might be simply left blank. 
@@ -922,9 +961,8 @@ const POLICY_BLOCKS = [
       <p>This allows us to engage in appropriate support, risk mitigation, and continue to
       evaluate/research/innovate on the use of AI technology by staff, but only Permitted Uses of Permitted
       Tools and Models, by Permitted Users.</p>
-      <p>${rp(s)} will maintain this list and is responsible for evaluating benefits and risks
-      associated with a tool or service.</p>
-      <p>These should be viewed holistically (ideally not at an individual isolated task level, but as part of
+      <p>${rp(s)} will maintain this list and is responsible for approving or restricting a tool or service following a sandboxed/pilot evaluation process.</p>
+      <p>Evaluation should be viewed holistically (ideally not at an individual isolated task level, but as part of
       an end-to-end delivery analysis), including taking account of time to review, iterate and edit
       AI-generated content, or to uncover any unintended consequences or other bottlenecks in an established
       process.</p>
@@ -932,7 +970,8 @@ const POLICY_BLOCKS = [
       example, perhaps some may work more productively through editing an AI output as an initial draft,
       whereas others may work effectively by retaining human ownership throughout).</p>
       <p>Use of AI-enabled services designed specifically for assisting in areas of neurodiversity or
-      disability should be considered carefully in this light, to ensure equality of opportunity for all.</p>`, // ADAPTED: "named on Page 1" -> interpolated name
+      disability should be considered carefully in this light, to ensure equality of opportunity for all. 
+      </p>`, // ADAPTED: "named on Page 1" -> interpolated name
   },
   {
     id: "permittedUses",

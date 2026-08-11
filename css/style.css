@@ -29,6 +29,16 @@ header h1 {
   white-space: nowrap;
 }
 
+header h1 .home-link {
+  color: #333;
+  text-decoration: none;
+  margin-right: 6px;
+}
+
+header h1 .home-link:hover {
+  text-decoration: underline;
+}
+
 header .actions {
   display: flex;
   gap: 8px;
@@ -320,4 +330,143 @@ header button:hover {
 {
   padding: 6px 9px;
   text-align: left;
+}
+
+/* ---------- Feedback banner ---------- */
+/* Shown centred over a dimmed backdrop, like an alert box - a corner
+   toast was too easy to miss right after a file download. */
+
+.feedback-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.feedback-banner {
+  position: relative;
+  width: 380px;
+  max-width: 100%;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  background: #fff;
+  border: 1px solid #333;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.3);
+  padding: 18px 20px;
+}
+
+.feedback-banner .feedback-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  border: none;
+  background: none;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+}
+
+.feedback-banner .feedback-close:hover {
+  color: #000;
+}
+
+.feedback-title {
+  font-weight: bold;
+  margin: 0 0 6px 0;
+}
+
+.feedback-question {
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.feedback-useful-options {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.feedback-useful {
+  flex: 1;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  padding: 12px 4px;
+  border: 1px solid #999;
+  background: #fff;
+  cursor: pointer;
+}
+
+.feedback-useful:hover {
+  background: #f2f2f2;
+}
+
+.feedback-useful.selected {
+  background: #333;
+  color: #fff;
+  border-color: #333;
+}
+
+.feedback-comments,
+.feedback-contact {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  padding: 6px;
+  border: 1px solid #999;
+  margin-bottom: 8px;
+  resize: vertical;
+}
+
+.feedback-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.feedback-send {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  padding: 6px 12px;
+  border: 1px solid #333;
+  background: #f2f2f2;
+  cursor: pointer;
+}
+
+.feedback-send:disabled {
+  color: #999;
+  border-color: #ccc;
+  cursor: not-allowed;
+}
+
+.feedback-send:not(:disabled):hover {
+  background: #333;
+  color: #fff;
+}
+
+.feedback-skip {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  padding: 6px 12px;
+  border: 1px solid #999;
+  background: #fff;
+  cursor: pointer;
+}
+
+.feedback-skip:hover {
+  background: #f2f2f2;
+}
+
+.feedback-thanks {
+  margin: 0;
+  font-weight: bold;
+  text-align: center;
 }

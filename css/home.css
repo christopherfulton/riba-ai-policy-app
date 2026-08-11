@@ -1,0 +1,230 @@
+/* Landing page only. Deliberately separate from style.css, which is
+   scoped to the policy builder tool itself. */
+
+body {
+  margin: 0;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 16px;
+  color: #000;
+  background: #fff;
+}
+
+header {
+  padding: 10px 20px;
+  background: #f2f2f2;
+  border-bottom: 2px solid #333;
+}
+
+header h1 {
+  font-size: 18px;
+  margin: 0;
+}
+
+header h1 .home-link {
+  color: #333;
+  text-decoration: none;
+  margin-right: 6px;
+}
+
+header h1 .home-link:hover {
+  text-decoration: underline;
+}
+
+main {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: normal;
+  border-bottom: 1px solid rgb(86, 86, 86);
+  margin: 40px 0 12px 0;
+}
+
+h2:first-of-type {
+  margin-top: 0;
+}
+
+p {
+  line-height: 1.6;
+  margin: 0 0 14px 0;
+}
+
+ul {
+  line-height: 1.6;
+  padding-left: 22px;
+}
+
+.intro {
+  font-size: 18px;
+}
+
+.cta {
+  margin: 28px 0;
+  text-align: center;
+}
+
+.cta a.button {
+  display: inline-block;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 14px 28px;
+  border: 2px solid #333;
+  background: #f2f2f2;
+  color: #000;
+  text-decoration: none;
+}
+
+.cta a.button:hover {
+  background: #333;
+  color: #fff;
+}
+
+.placeholder {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  color: #a00;
+  background: #fff6f6;
+  border: 1px dashed #a00;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+}
+
+.more-links {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  color: #555;
+}
+
+footer {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: #777;
+  text-align: center;
+  padding: 20px;
+}
+
+/* ---------- Practice profile cards (choose-profile.html) ---------- */
+
+.profile-intro {
+  font-size: 18px;
+}
+
+.profile-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 28px 0;
+}
+
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #999;
+  padding: 18px 20px;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  background: #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.profile-card:hover {
+  border-color: #333;
+  background: #fafafa;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+.profile-card .profile-tag {
+  display: inline-block;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.profile-card h3 {
+  font-size: 20px;
+  font-weight: normal;
+  margin: 0 0 8px 0;
+}
+
+.profile-card p {
+  margin: 0 0 10px 0;
+}
+
+.profile-card p:last-of-type {
+  margin-bottom: 14px;
+}
+
+.profile-card .profile-note {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  color: #555;
+}
+
+.profile-card .button {
+  display: inline-block;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: 2px solid #333;
+  background: #f2f2f2;
+  color: #000;
+  text-decoration: none;
+}
+
+.profile-card .button:hover {
+  background: #333;
+  color: #fff;
+}
+
+.profile-card .button.secondary {
+  font-weight: normal;
+  padding: 8px 16px;
+  font-size: 13px;
+  border-color: #999;
+  background: #fff;
+}
+
+.profile-card .button.secondary:hover {
+  background: #f2f2f2;
+  color: #000;
+}
+
+.profile-card .button-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: auto; /* pins the button(s) to the bottom of the card, however long the text above is */
+  padding-top: 6px;
+}
+
+.profile-card ul {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 10px 0;
+  padding-left: 20px;
+}
+
+.profile-card li {
+  margin-bottom: 6px;
+}
+
+.profile-card li ul {
+  margin: 6px 0 0 0;
+}
+
+.back-link {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  text-align: center;
+}

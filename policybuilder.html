@@ -3,13 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RIBA AI Policy Builder</title>
+<title>AI Policy Builder</title>
 <link rel="stylesheet" href="css/style.css">
+
+<!-- Cloudflare Web Analytics - see index.html for setup notes. Use the same token on both pages. -->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "PASTE_YOUR_CLOUDFLARE_BEACON_TOKEN_HERE"}'></script>
 </head>
 <body>
 
 <header>
-  <h1>RIBA Practice Artificial Intelligence Policy Builder</h1>
+  <h1><a href="index.html" class="home-link" title="Back to home">&larr;</a> Practice Artificial Intelligence Policy Builder</h1>
   <div class="actions">
     <button id="btn-bookmark-link" type="button">Bookmark your progress (to return to later)</button>
     <button id="btn-export-pdf" type="button">Export PDF</button>
@@ -24,11 +27,13 @@
 <!-- PDF export library (only external dependency; Word export needs none) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
+<script src="js/policyHelpers.js"></script>
 <script src="js/policyContent.js"></script>
 <script src="js/state.js"></script>
 <script src="js/urlState.js"></script>
 <script src="js/render.js"></script>
 <script src="js/export.js"></script>
+<script src="js/feedback.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

@@ -42,10 +42,10 @@ function copyTextToClipboard(text) {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   // Restore progress from the URL, if this page was opened from a
   // bookmark/link that has any (must happen before the first render).
-  const restored = UrlState.loadFromUrl();
+  const restored = await UrlState.loadFromUrl();
   if (restored) AppState.loadState(restored);
 
   Render.buildLayout();
@@ -60,10 +60,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("btn-export-pdf").addEventListener("click", () => {
     PolicyExport.toPdf();
+    Feedback.maybeShow();
   });
 
   document.getElementById("btn-export-word").addEventListener("click", () => {
     PolicyExport.toWord();
+    Feedback.maybeShow();
   });
 
   // No browser exposes a JS API to create a bookmark directly - that
@@ -74,8 +76,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // browser itself can do that. The link is also copied to the
   // clipboard as a fallback, in case they'd rather paste it somewhere.
   const bookmarkBtn = document.getElementById("btn-bookmark-link");
-  bookmarkBtn.addEventListener("click", () => {
-    UrlState.flushNow(AppState.get()); // make sure the URL isn't stale from the debounce
+  bookmarkBtn.addEventListener("click", async () => {
+    await UrlState.flushNow(AppState.get()); // make sure the URL isn't stale from the debounce
     if (!AppState.isDirty()) {
       alert("Nothing has been entered yet, so there's no progress to bookmark.");
       return;
@@ -87,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `Press ${shortcut} now to bookmark it.\n\n` +
         `(The link has also been copied to your clipboard, if you'd rather paste it somewhere instead.)`
     );
+    Feedback.maybeShow();
   });
 
   // --- Warn before losing unsaved work -------------------------------------
