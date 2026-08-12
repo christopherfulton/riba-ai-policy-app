@@ -65,6 +65,14 @@ const ETHICAL_DIMENSION_OPTIONS = [
   },
 ];
 
+const REVIEW_PROCESS_OPTIONS = [
+  { value: "recorded", label: "Be recorded in writing and saved in line with our Quality Assurance processes - who carried out the review, when, what was reviewed, which version of services/tools and what prompts were used."},
+  { value: "primarySources", label: "Include checking against statutory/primary sources where applicable, for example Building Regulations or standards." },
+  { value: "upToDate", label: "Ensure any information referenced by generative AI is up to date, and not linking to old versions or outdated standards. (Model training data often lags behind regulatory amendments)" },
+  { value: "noMaths", label: "Ensure no mathematical or structural calculations are being carried out by the LLM, and if so these must be recalculated deterministically (for example load-bearing limits, fire resistance ratings, egress widths, dimensions, counting elements, etc)" },
+  { value: "bias", label: "Include checking for bias, especially if guided by historical data, e.g. sustainability, planning, inclusion." }
+];
+
 const COGNITIVE_OFFLOADING_OPTIONS = [
   {
     value: "draftFirst",
@@ -454,23 +462,35 @@ const POLICY_BLOCKS = [
   },
   {
     id: "humanOversight",
-    type: "static",
+    type: "multiOther",
+    field: "reviewProcess",
+    detailsField: "reviewProcessDetails",
+    otherField: "reviewProcessOther",
+    options: REVIEW_PROCESS_OPTIONS,
     guidanceText: `"Checking and reviewing output" is a requirement that appears a number of times in this policy template.
     <br/><br/>
-    In practice, this means three increasingly rigorous tiers of actually doing a review, which should be evaluated based on the nature and criticality of the output:
-    <br/><br/>
-    1. Reading the AI output diligently and with a "critical eye" (but in isolation) to catch inaccuracies, unwanted content or hallucinations;
-    <br/><br/>
-    2. Tracing any references provided back to find actual source material, to verify that the reference says what the output claims;
-    <br/><br/>
-    3. To capture errors of omission (where the AI output did not contain an important piece of information that would have been necessary), the only option 
-    is to trace information directly from a primary source, or wide set of sources. It's worth noting here that the only logical method for avoiding such errors of omission means 
-    doing significant research yourself, without the AI.
+    In practice, actually performing a review may comprise significant rigour, which should be evaluated based on the nature and criticality of the output.
     <br/><br/>
     <strong>A successful implementation of this requirement will involve creating a culture where staff feel 
-    confident overruling or checking an AI-generated output, and no-one worries that they may be penalised for doing so.</strong>`,
-    render: () =>
-      `<h2>Human Oversight</h2>
+    confident overruling or checking an AI-generated output, and no-one worries that they may be penalised for doing so.</strong>
+    <br/><br/>
+    Select any review requirements that you want staff to follow below (optional):
+    <br/><br/>
+    <strong>Reviews must:</strong>`,
+    render: (s) => {
+      const selected = REVIEW_PROCESS_OPTIONS.filter((o) => (s.reviewProcess || []).includes(o.value));
+      
+      const items = selected
+        .map((o) => {
+          
+          return `<li>${esc(o.label)}</li>`;
+        })
+        .join("");
+      const otherItem =
+        (s.reviewProcess || []).includes("other") && s.reviewProcessOther
+          ? `<li>${esc(s.reviewProcessOther)}</li>`
+          : "";
+      return `<h2>Human Oversight</h2>
       <p>Human oversight in the form of content review and quality check must be applied to all AI-generated
       outputs, including those embedded within familiar tools such as web search, word processing or email
       applications. Individuals in our practice must apply their skill, knowledge and expertise to assess
@@ -479,13 +499,16 @@ const POLICY_BLOCKS = [
       <ul>
         <li>Critically reading AI generated output to catch inaccuracies/inconsistences/unwanted content/hallucinations.</li>
         <li>Tracing any provided references back to source material, to verify the reference says what the AI output claims.</li>
-        <li>[Most onerous] Capturing and correcting "errors of omission" where the AI ouput does <strong>not</strong> contain a 
+        <li>[Most onerous] Capturing and correcting "errors of omission" where the AI output does <strong>not</strong> contain a 
         piece of information that should have been included. This
         can only be done by manual source material research.</li>
       </ul>
+      ${(items || otherItem) ? `<p>Reviews must:</p>` : ""}
+      ${(items || otherItem) ? `<ul>${items}${otherItem}</ul>` : ""}
       <p>Professional judgement always takes precedence over any AI-generated output.</p>
       <p>We never share AI-generated outputs outside the practice without prior internal review and
-      oversight.</p>`,
+      oversight.</p>`;
+    },
   },
   {
     id: "competence",
@@ -949,7 +972,7 @@ const POLICY_BLOCKS = [
       This effectively says "we don't approve any generative AI services or tools for use in our practice".
       <br/><br/>
       However, with the prevalence of generative AI services embedded in everything from web search to email clients, 
-      you may find enforcing a total ban on generative AI use very difficult in practice, and it's likely that staff may decide to 
+      you may find enforcing a total ban on generative AI use very difficult in practice, and it's possible that some staff may decide to 
       use personal accounts outside of your control or oversight. 
       <br/><br/>
       At a minimum, it would be wise to include services such as Google's built-in "AI-mode" web search summary, and basic included generative AI features 
