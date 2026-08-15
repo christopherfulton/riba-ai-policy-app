@@ -143,8 +143,9 @@ const PERMITTED_USE_FIELDS = [
     label: "Type",
     options: PERMITTED_USE_TYPE_OPTIONS,
   },
-  { type: "textarea", key: "benefits", label: "Benefits", placeholder: "What value does this tool provide?" },
-  { type: "textarea", key: "risks", label: "Risks", placeholder: "What are the known risks?" },
+  { type: "textarea", key: "problemStatement", label: "Problem", placeholder: `What problem does it solve? 
+Has this been demonstrated to work reliably in robust testing/evaluation?` },
+  { type: "textarea", key: "risks", label: "Risks", placeholder: "What are the known risks associated with its use?" },
   {
     type: "choiceText",
     key: "permittedUserScope",
@@ -456,7 +457,7 @@ const POLICY_BLOCKS = [
         ${(items || otherItem) ? `<p>Specific ethical concerns may exist for our practice in questions of:</p>` : ""}
         ${(items || otherItem) ? `<ul>${items}${otherItem}</ul>` : ""}
         ${(items || otherItem) ? `<p>These inform our decision-making and evaluation process for selection and use of AI technology and
-        may impact or rule in/out inclusion of specific tools in our Permitted Use list.</p>` : ""}
+        may impact or rule in/out inclusion of specific tools in our <strong>Permitted Use</strong> list.</p>` : ""}
         `;
     },
   },
@@ -537,12 +538,12 @@ const POLICY_BLOCKS = [
       </ul>
       <p>Where uncertain about a particular AI use, please contact the Responsible Person (${rp(s)}) before implementing any AI
       use.</p>
-      <p>Internal review processes and oversight chains for any AI output must include those with competence
+      <p>Internal review and oversight processes for any AI output must include those with competence
       to adequately assess it.</p>
       <ul>
         <li>For example, an assistant may prompt an AI model but the review process to decide what output to
         accept/reject may require a more experienced practitioner;</li>
-        <li>Or, a junior member of staff may need to check the accuracy of LLM-generated text information with
+        <li>Or, a junior member of staff may need to check the accuracy of LLM-generated information with
         a senior architect, technician or consultant before accepting its validity.</li>
       </ul>`,
   },
@@ -616,13 +617,13 @@ const POLICY_BLOCKS = [
         <p>Data protection laws, policies and principles apply to all AI interactions in exactly the same way
         as all other software or web actions.</p>
         <p>All staff must ensure any data typed or uploaded into any AI tool (including prompts to AI chatbots
-        and web searches) is either:</p>
+        and web searches) is:</p>
         <ul>
-          <li>already publicly available, or free of restriction (e.g. client confidentiality, commercial
+          <li>either already publicly available, or free of restriction (e.g. client confidentiality, commercial
           sensitivity), or</li>
           <li>protected to an appropriate level by only using generative AI services covered by enterprise
-          data protection agreements (see Permitted Use section), or</li>
-          <li>compliant with any data restrictions of the relevant contract governing that project or
+          data protection agreements (see Permitted Use section);</li>
+          <li>and, compliant with any data restrictions of the relevant contract governing that project or
           data.</li>
         </ul>
         <p>Personal and sensitive data can only be input or accessed by generative AI services in accordance
@@ -667,7 +668,7 @@ const POLICY_BLOCKS = [
       relevant legislation, standards and contractual obligations. Use of AI does not provide an excuse for
       anyone to be in breach of their responsibilities.</p>
       <p>The Responsible Person named on Page 1 <strong>must confirm with our Public Indemnity insurers that our PI cover remains valid</strong>
-      before adding any AI technology as part of project delivery to the Permitted Use list (found later in
+      before adding any generative AI technology to the Permitted Use list (found later in
       this document).</p>
       <p>The practice must be able to account for and explain all design outputs, including any that have
       involved the use of AI. Design decision-making and associated explanations cannot be delegated or
@@ -694,9 +695,9 @@ const POLICY_BLOCKS = [
       <p>All use of generative AI by staff must take into account hallucinations, errors, and eagerness to
       please (“sycophancy”).</p>
       <p>When planning any use of generative AI to produce output, the required time and effort to check for
-      accuracy and bias, and edit as necessary, should be accounted for.</p>
+      accuracy, bias and omissions (and edit as necessary) should be accounted for.</p>
       <ul>
-        <li>A common temptation is to consider using AI generation in tasks or situations where there may be a
+        <li>A common temptation is to consider using AI generation to save time in tasks or situations where there may be a
         significant or unusual time pressure, for example a tight deadline or late submission. Be aware that
         this is where such risks are greater, and checking output is more likely to be missed or ignored. This
         should never be an excuse for skipping review and checking. Consider alternative approaches or
@@ -715,11 +716,11 @@ const POLICY_BLOCKS = [
       <p>This can manifest itself in different ways:</p>
       <ul>
         <li>An AI model may be likely to generate examples of certain particular architectural styles,
-        regions, or colour palettes far more readily than others.</li>
+        regions, or colour palettes more readily than others.</li>
         <li>A model may also output content skewed to a particular world-view, belief system or ethical code,
         following larger numbers of examples of these found in its training data.</li>
-        <li>Outputs often highlight and emphasize existing biases towards people and their shared
-        characteristics.</li>
+        <li>Outputs often highlight and emphasize existing biases towards people and their protected characteristics 
+        <i>(see the Equality Act 2010)</i>.</li>
       </ul>
       <p>This risks hindering inclusivity and increasing unfairness. Professional judgment should always be
       applied when using AI to promote and protect the public interest and social purpose.</p>
@@ -732,7 +733,7 @@ const POLICY_BLOCKS = [
     guidanceText: "",
     render: () =>
       `<h2>Reliability, Hallucination and Sycophancy</h2>
-        <p>Large Language Models answer questions/prompts confidently yet incorrectly at a much higher rate
+        <p>Large Language Models respond to questions/prompts <i>confidently yet incorrectly</i> at a much higher rate
         than most people realise - the text “feels” right but contains inaccurate information.</p>
         <ul>
           <li>For example: false information about building regulations, planning law, accessibility or
@@ -855,7 +856,7 @@ const POLICY_BLOCKS = [
     `,
     render: () =>
       `<p>Use of AI services contrary to the Permitted Use list (later in this document) is
-      not allowed, even if a client requests such use.</p>`,
+      not allowed, <i>even if</i> a client requests such use.</p>`,
   },
   {
     id: "clientCommunicationTextEnabled",
@@ -866,7 +867,7 @@ const POLICY_BLOCKS = [
     render: (s) =>
       s.clientCommunicationTextEnabled
         ? `<p>Explanatory text relevant to AI use by us and/or our clients is included in our standard
-           appointment communication or documentation. This text is as follows:</p>
+           appointment communication, marketing, or documentation. This text is as follows:</p>
            <p>${
              s.clientCommunicationText && s.clientCommunicationText.trim()
                ? esc(s.clientCommunicationText).replace(/\n/g, "<br>")
@@ -887,7 +888,7 @@ const POLICY_BLOCKS = [
     id: "sustainability",
     type: "static",
     guidanceText: `
-      It's often tricky to quantify the carbon footprint associated with generative AI usage, however there is ongoing research to do so by RIBA.
+      It's often tricky to quantify the carbon footprint associated with generative AI usage, however there is ongoing research to do so by RIBA and others.
       <br/><br/>
       Bear in mind that single prompts to chatbots may appear to have a very small carbon footprint; however, an agent or loop approach could lead to 
       many thousands or even millions of "tokens" used by the generative AI service, each of which represent energy and resource implications.
@@ -993,7 +994,7 @@ const POLICY_BLOCKS = [
       example, perhaps some may work more productively through editing an AI output as an initial draft,
       whereas others may work effectively by retaining human ownership throughout).</p>
       <p>Use of AI-enabled services designed specifically for assisting in areas of neurodiversity or
-      disability should be considered carefully in this light, to ensure equality of opportunity for all. 
+      disability (e.g. dyslexia assitance) should be considered carefully in this light, to ensure equality of opportunity for all. 
       </p>`, // ADAPTED: "named on Page 1" -> interpolated name
   },
   {
