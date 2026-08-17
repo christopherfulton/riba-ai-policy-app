@@ -318,7 +318,7 @@ function effectiveDateBlock() {
     type: "text",
     field: "effectiveDate",
     label: "Date",
-    placeholder: "e.g. 1 September 2026",
+    placeholder: "Date policy effective from",
     render: (s) => `<h3>Date: ${esc(s.effectiveDate) || "[Date]"}</h3>`,
   };
 }
