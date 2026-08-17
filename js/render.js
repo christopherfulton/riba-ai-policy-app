@@ -11,29 +11,47 @@ const Render = (function () {
 
     POLICY_BLOCKS.forEach((block) => {
       const row = document.createElement("div");
-      row.className = "row";
       row.dataset.blockId = block.id;
 
-      const policyCell = document.createElement("div");
-      policyCell.className = block.pageBreak ? "policy-cell page-break" : "policy-cell";
-      policyCell.id = "policy-" + block.id;
+      if (block.fullWidth) {
+        // Spans the whole content width instead of the usual narrow
+        // guidance column: input control on top, then a labelled
+        // preview of the policy text it produces underneath. This is
+        // purely an on-screen layout choice - the exported PDF/Word
+        // document is built separately from block.render(state) (see
+        // getPolicyHtml() below) and never touches this control markup
+        // at all, full-width or not.
+        row.className = "row row-full-width";
+        row.innerHTML = `
+          ${buildGuidanceNote(block)}
+          <div class="control" id="control-${block.id}"></div>
+          <p class="preview-label">Preview - this is what appears in the exported policy</p>
+          <div class="policy-cell${block.pageBreak ? " page-break" : ""}" id="policy-${block.id}"></div>
+        `;
+      } else {
+        row.className = "row";
+        const policyCell = document.createElement("div");
+        policyCell.className = block.pageBreak ? "policy-cell page-break" : "policy-cell";
+        policyCell.id = "policy-" + block.id;
 
-      const guidanceCell = document.createElement("div");
-      guidanceCell.className = "guidance-cell";
-      guidanceCell.innerHTML = buildGuidance(block);
+        const guidanceCell = document.createElement("div");
+        guidanceCell.className = "guidance-cell";
+        guidanceCell.innerHTML = `${buildGuidanceNote(block)}<div class="control" id="control-${block.id}"></div>`;
 
-      row.appendChild(policyCell);
-      row.appendChild(guidanceCell);
+        row.appendChild(policyCell);
+        row.appendChild(guidanceCell);
+      }
+
       container.appendChild(row);
     });
 
     refreshPolicyText();
   }
 
-  function buildGuidance(block) {
+  function buildGuidanceNote(block) {
     const title = block.guidanceTitle ? `<p class="guidance-title">${esc(block.guidanceTitle)}</p>` : "";
     const text = block.guidanceText ? `<p class="guidance-text">${block.guidanceText}</p>` : "";
-    return `<div class="guidance-note">${title}${text}</div><div class="control" id="control-${block.id}"></div>`;
+    return `<div class="guidance-note">${title}${text}</div>`;
   }
 
   // Called once after buildLayout() to wire up interactive controls.
@@ -294,8 +312,13 @@ const Render = (function () {
 
   // ---- Repeatable multi-field entries (e.g. the Permitted Use register) ----
 
-  // Renders the control(s) for ONE field of ONE entry.
-  function entryFieldHtml(fd, row) {
+  // Renders the control(s) for ONE field of ONE entry. `namePrefix` -
+  // unique per entry (see callers below) - becomes the radio `name`
+  // attribute for yesno/choiceText fields, so the browser treats each
+  // one as its own mutually-exclusive group instead of leaving every
+  // radio on the page ungrouped (which let Yes and No both end up
+  // checked at once).
+  function entryFieldHtml(fd, row, namePrefix) {
     const val = row[fd.key];
     if (fd.type === "text") {
       return `<label>${esc(fd.label)}
@@ -313,11 +336,12 @@ const Render = (function () {
       }> ${esc(fd.label)}</label>`;
     }
     if (fd.type === "yesno") {
+      const name = `${namePrefix}-${fd.key}`;
       return `<div class="field-block"><span class="field-label">${esc(fd.label)}</span>
-        <label class="radio-label inline"><input type="radio" data-key="${fd.key}" value="yes" ${
+        <label class="radio-label inline"><input type="radio" name="${name}" data-key="${fd.key}" value="yes" ${
         val === "yes" ? "checked" : ""
       }> Yes</label>
-        <label class="radio-label inline"><input type="radio" data-key="${fd.key}" value="no" ${
+        <label class="radio-label inline"><input type="radio" name="${name}" data-key="${fd.key}" value="no" ${
         val === "no" ? "checked" : ""
       }> No</label>
       </div>`;
@@ -348,11 +372,12 @@ const Render = (function () {
     }
     if (fd.type === "choiceText") {
       const scope = row[fd.key];
+      const name = `${namePrefix}-${fd.key}`;
       const optionsHtml = fd.options
         .map(
-          (o) => `<label class="radio-label"><input type="radio" data-key="${fd.key}" value="${esc(o.value)}" ${
-            scope === o.value ? "checked" : ""
-          }> ${esc(o.label)}</label>`
+          (o) => `<label class="radio-label"><input type="radio" name="${name}" data-key="${fd.key}" value="${esc(
+            o.value
+          )}" ${scope === o.value ? "checked" : ""}> ${esc(o.label)}</label>`
         )
         .join("");
       const showText = scope && !(fd.hideTextFor || []).includes(scope);
@@ -376,6 +401,7 @@ const Render = (function () {
   function wireEntryField(block, index, fd) {
     const container = document.getElementById(`entry-${block.id}-${index}-${fd.key}`);
     if (!container) return;
+    const namePrefix = `${block.id}-${index}`;
 
     if (fd.type === "text" || fd.type === "textarea") {
       const input = container.querySelector("input, textarea");
@@ -396,7 +422,7 @@ const Render = (function () {
     if (fd.type === "multiOther") {
       const rebuild = () => {
         const row = AppState.get()[block.field][index];
-        container.innerHTML = entryFieldHtml(fd, row);
+        container.innerHTML = entryFieldHtml(fd, row, namePrefix);
         wireEntryField(block, index, fd);
       };
       container.querySelectorAll('input[type=checkbox][data-key="' + fd.key + '"]').forEach((cb) => {
@@ -420,7 +446,7 @@ const Render = (function () {
     if (fd.type === "choiceText") {
       const rebuild = () => {
         const row = AppState.get()[block.field][index];
-        container.innerHTML = entryFieldHtml(fd, row);
+        container.innerHTML = entryFieldHtml(fd, row, namePrefix);
         wireEntryField(block, index, fd);
       };
       container.querySelectorAll("input[type=radio]").forEach((r) => {
@@ -438,9 +464,24 @@ const Render = (function () {
     }
   }
 
+  // Fields whose control needs more than one grid column's worth of
+  // room (textareas, and anything built from a set of options) get
+  // `entry-field-wide` so they span the full row of the entry-fields
+  // grid - see .entry-fields in style.css. Short fields (a single text
+  // input, a Yes/No pair) sit side by side instead.
+  const WIDE_ENTRY_FIELD_TYPES = ["textarea", "multiOther", "choiceText"];
+
   function entryCardHtml(block, row, index) {
+    const namePrefix = `${block.id}-${index}`;
     const fieldsHtml = block.entryFields
-      .map((fd) => `<div class="entry-field" id="entry-${block.id}-${index}-${fd.key}">${entryFieldHtml(fd, row)}</div>`)
+      .map((fd) => {
+        const widthClass = WIDE_ENTRY_FIELD_TYPES.includes(fd.type) ? "entry-field-wide" : "entry-field-narrow";
+        return `<div class="entry-field ${widthClass}" id="entry-${block.id}-${index}-${fd.key}">${entryFieldHtml(
+          fd,
+          row,
+          namePrefix
+        )}</div>`;
+      })
       .join("");
     return `<div class="entry-card" data-index="${index}">
       <div class="entry-fields">${fieldsHtml}</div>

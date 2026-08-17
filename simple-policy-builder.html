@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Policy Toolkit</title>
-<link rel="stylesheet" href="css/home.css">
+<title>AI Policy Builder (Simplified)</title>
+<link rel="stylesheet" href="css/style.css">
 
 <!-- Cloudflare Web Analytics - see index.html for setup notes. Use the same token on every page. -->
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "PASTE_YOUR_CLOUDFLARE_BEACON_TOKEN_HERE"}'></script>
@@ -12,39 +12,29 @@
 <body>
 
 <header>
-  <h1><a href="index.html" class="home-link" title="Back to home">&larr;</a> Practice Guidance: Artificial Intelligence</h1>
+  <h1><a href="index.html" class="home-link" title="Back to home">&larr;</a> Practice Artificial Intelligence Policy Builder (Simplified)</h1>
+  <div class="actions">
+    <button id="btn-bookmark-link" type="button">Bookmark your progress (to return to later)</button>
+    <button id="btn-export-pdf" type="button">Export PDF</button>
+    <button id="btn-export-word" type="button">Export Word</button>
+  </div>
 </header>
 
-<main>
-  <!--
-    TODO: this is the Profile 1 (small practice) builder, not yet built.
-    It's meant to be a shorter, simplified version of policybuilder.html
-    for smaller, more risk-averse practices - fewer questions, a more
-    cautious set of default clauses. For now this page just explains
-    that and offers the Profile 2 template as a stand-in.
-  -->
-  <h2>Simple Policy Builder</h2>
-  <p>
-    This simplified policy builder - for smaller, more risk-averse Architecture practices - is still being built.
-  </p>
-  <p>
-    In the meantime, you're welcome to use the full template instead. It asks more questions than this
-    simplified version eventually will, but every question can be left blank or answered cautiously if it
-    doesn't apply to you.
-  </p>
-
-  <div class="cta">
-    <a class="button" href="policybuilder.html">Use the full template instead &rarr;</a>
-  </div>
-
-  <p class="back-link">
-    <a href="choose-profile.html">&larr; Back to practice profiles</a>
-  </p>
+<main id="app-body">
+  <!-- Rows are generated here by js/render.js -->
 </main>
 
-<footer>
-  Author: Chris Fulton, 2026
-</footer>
+<!-- PDF export library (only external dependency; Word export needs none) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
+<script src="js/policyHelpers.js"></script>
+<script src="js/policyContentShared.js"></script>
+<script src="js/policyContentLite.js"></script>
+<script src="js/state.js"></script>
+<script src="js/urlState.js"></script>
+<script src="js/render.js"></script>
+<script src="js/export.js"></script>
+<script src="js/feedback.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

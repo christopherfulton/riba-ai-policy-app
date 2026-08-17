@@ -75,6 +75,45 @@ header button:hover {
   border-bottom: 0px solid #ddd;
 }
 
+/* Full-width blocks (currently just the Permitted Use register): the
+   narrow two-column layout above doesn't give its entry cards or its
+   preview table enough room, so this stacks input-then-preview across
+   the whole content width instead. Only affects the on-screen builder
+   - the exported PDF/Word document is unaffected either way. */
+.row-full-width {
+  display: block;
+  padding: 20px 0 30px 0;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+.row-full-width .guidance-note {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  color: #333;
+  margin-bottom: 14px;
+}
+
+.row-full-width .control {
+  margin-bottom: 24px;
+}
+
+.row-full-width .preview-label {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #666;
+  margin: 0 0 10px 0;
+}
+
+.row-full-width .policy-cell {
+  border: 1px solid #ddd;
+  background: #fafafa;
+  padding: 4px 20px 16px 20px;
+}
+
 #policy-logo {
   border-bottom: 1px solid grey;
 }
@@ -256,16 +295,25 @@ header button:hover {
 .entry-card {
   border: 1px solid #ccc;
   background: #fff;
-  padding: 10px 12px;
+  padding: 14px 16px;
 }
 
+/* Short fields (a single text input, a Yes/No pair) sit side by side;
+   fields needing more room (textareas, option lists - see
+   entry-field-wide in render.js) span the full row instead. */
 .entry-fields {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  align-items: start;
+  gap: 14px 24px;
 }
 
 .entry-field {
-  margin-bottom: 8px;
+  min-width: 0; /* let long unbroken text (e.g. a pasted link) shrink instead of overflowing its grid track */
+}
+
+.entry-field-wide {
+  grid-column: 1 / -1;
 }
 
 .entry-card .remove-row {
@@ -276,6 +324,8 @@ header button:hover {
   cursor: pointer;
   padding: 4px 8px;
   margin-top: 4px;
+  border-color: #a00;
+  color: #a00;
 }
 
 .entry-card .remove-row:hover {
@@ -289,12 +339,12 @@ header button:hover {
   font-size: 13px;
   padding: 6px 10px;
   border: 1px solid #333;
-  background: #fff;
+  background: #e9efe5;
   cursor: pointer;
 }
 
 .add-row:hover {
-  background: #e6e6e6;
+  background: #cae5b5;
 }
 
 /* Permitted Use register: how each entry appears in the policy text */

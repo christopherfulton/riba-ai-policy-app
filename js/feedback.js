@@ -81,8 +81,7 @@ const Feedback = (function () {
     });
   }
 
-  // Centred over a dimmed backdrop (like an alert box) rather than a
-  // corner toast, so it isn't missed right after a file download.
+  // Centred over a dimmed backdrop (like an alert box) so it isn't missed right after a file download.
   function buildBanner() {
     const overlay = document.createElement("div");
     overlay.className = "feedback-overlay";
