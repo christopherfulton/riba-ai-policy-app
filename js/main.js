@@ -3,11 +3,7 @@
  * Entry point: builds the page, wires up the header bar, and keeps
  * the left-hand policy text live as the user fills in the right-hand
  * controls.
- *
- * There is no "Clear" button - starting over just means refreshing
- * the page. The beforeunload handler below warns the user before
- * that happens (or the tab is closed) if they've entered anything.
- *
+ * 
  * Progress is "saved" by keeping it encoded in the page's own URL (see
  * urlState.js) - bookmarking the page, or copying the address bar,
  * captures a link that restores everything when opened again.
@@ -68,13 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     Feedback.maybeShow();
   });
 
-  // No browser exposes a JS API to create a bookmark directly - that
-  // capability was removed everywhere years ago, specifically so pages
-  // can't auto-bookmark themselves. The closest available thing: make
-  // sure the address bar is fully up to date, then tell the user the
-  // exact keystroke that actually creates the bookmark, since only the
-  // browser itself can do that. The link is also copied to the
-  // clipboard as a fallback, in case they'd rather paste it somewhere.
+  
   const bookmarkBtn = document.getElementById("btn-bookmark-link");
   bookmarkBtn.addEventListener("click", async () => {
     await UrlState.flushNow(AppState.get()); // make sure the URL isn't stale from the debounce
@@ -83,7 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
     const shortcut = isMacPlatform() ? "Cmd+D" : "Ctrl+D";
-    copyTextToClipboard(window.location.href).catch(() => {}); // best-effort convenience copy
+    copyTextToClipboard(window.location.href).catch(() => {}); 
     alert(
       `Your progress is saved in this page's address bar.\n\n` +
         `Press ${shortcut} now to bookmark it.\n\n` +
@@ -92,11 +82,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     Feedback.maybeShow();
   });
 
-  // --- Warn before losing unsaved work -------------------------------------
-
-  window.addEventListener("beforeunload", (e) => {
-    //if (!AppState.isDirty()) return;
-    //e.preventDefault();
-    //e.returnValue = ""; // required by Chrome to trigger the native warning
-  });
+  
 });

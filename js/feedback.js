@@ -3,17 +3,11 @@
  * ------------------------------------------------------------------
  * A small, dismissible feedback prompt shown once a user has actually
  * done something with their policy (bookmarked progress, or exported
- * a PDF/Word doc). Two things it asks for, both optional:
- *   1. Whether the tool was useful (one tap: Yes / Somewhat / No)
- *   2. A practice name or email, ONLY if the person wants us to know
- *      who's using the tool - clearly optional, easy to skip entirely.
- *
+ * a PDF/Word doc). 
+ * 
  * Where the answers go: this posts directly to a Google Form's
- * response endpoint from the browser (fire-and-forget, no backend of
- * our own to build or host). Responses land in that Form's linked
- * Google Sheet, which only your Google account can open - nobody else
- * gets access to the list. Nothing is sent anywhere unless the person
- * clicks "Send feedback".
+ * response endpoint from the browser. Responses land in that Form's linked
+ * Google Sheet.
  *
  * SETUP REQUIRED before this does anything - until FORM_ACTION_URL
  * below is filled in, maybeShow() is a no-op:
@@ -73,15 +67,13 @@ const Feedback = (function () {
     if (commentsValue) body.set(FIELD_ENTRIES.comments, commentsValue);
     if (contactValue) body.set(FIELD_ENTRIES.contact, contactValue);
 
-    // no-cors: fire-and-forget, we can't read the response, but that's
-    // fine - Google Forms doesn't need one, and there's nothing more
-    // useful to do client-side with a cross-origin opaque result.
+    
     fetch(FORM_ACTION_URL, { method: "POST", mode: "no-cors", body }).catch(() => {
       /* best-effort - if it fails (e.g. offline), we don't retry or bother the user about it */
     });
   }
 
-  // Centred over a dimmed backdrop (like an alert box) so it isn't missed right after a file download.
+  // Centred over a dimmed backdrop (like an alert box)
   function buildBanner() {
     const overlay = document.createElement("div");
     overlay.className = "feedback-overlay";

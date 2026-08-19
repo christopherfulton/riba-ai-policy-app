@@ -22,7 +22,7 @@ const AppState = (function () {
     notify();
   }
 
-  // For array fields (prohibitedUses checkboxes)
+  // For array fields
   function toggleArrayValue(field, value, checked) {
     const arr = new Set(data[field] || []);
     if (checked) arr.add(value);

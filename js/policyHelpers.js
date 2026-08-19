@@ -3,9 +3,7 @@
  * ------------------------------------------------------------------
  * Small utility functions for handling the user's entered answers,
  * shared by policyContent.js (building the policy wording) and
- * render.js (building the input controls). Split out from
- * policyContent.js so that file can stay focused on the policy
- * wording and options themselves.
+ * render.js (building the input controls). 
  * ------------------------------------------------------------------
  */
 
@@ -24,7 +22,6 @@ function yesNoText(value) {
   return "[Not yet answered]";
 }
 
-// Shorthand for "the Responsible Person's name, or a placeholder".
 function rp(s) {
   return esc(s.responsiblePerson) || "[Responsible Person]";
 }

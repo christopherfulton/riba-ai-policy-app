@@ -3,21 +3,9 @@
  * ------------------------------------------------------------------
  * Building blocks, option lists and helpers shared by both policy
  * builders:
- *   - js/policyContent.js     (the full template, "Template Policy.docx")
- *   - js/policyContentLite.js (the simplified template, "Template
- *                              Policy LITE.docx", linked to Practice
- *                              Profile 1)
+ *   - js/policyContent.js     (the full template)
+ *   - js/policyContentLite.js (the simplified template)
  *
- * What belongs here vs. what doesn't: only things that are genuinely
- * identical in both source documents (or are this app's own UI text,
- * not drawn from either document) belong in this file. Where the two
- * documents say something similar but not word-for-word identical,
- * that wording stays in each template's own content file - see the
- * comment at the top of policyContent.js for why that fidelity
- * matters. Sharing here is about not duplicating *logic* (option
- * lists, field definitions, render helpers) and the handful of
- * passages that truly are identical, not about forcing the two
- * policies to read the same.
  *
  * Loaded after policyHelpers.js (esc/rp/yesNoText/blankRowFor) and
  * before policyContent.js / policyContentLite.js.
@@ -45,10 +33,6 @@ const PERMITTED_USE_TYPE_OPTIONS = [
 ];
 
 // The fields that make up ONE entry in the Permitted Use register.
-// Both templates collect the same core fields; only the full template
-// additionally asks for a "Type" (see PERMITTED_USE_TYPE_OPTIONS) -
-// the simplified template's table in "Template Policy LITE.docx"
-// doesn't have that column.
 function buildPermittedUseFields({ includeType }) {
   const fields = [
     { type: "text", key: "name", label: "Name of AI tool/model/service", placeholder: "e.g. ChatGPT Enterprise" },
@@ -111,13 +95,7 @@ Has this been demonstrated to work reliably in robust testing/evaluation?`,
 }
 
 // Renders one completed Permitted Use entry as it appears in the
-// exported policy text. `includeType` must match whatever was passed
-// to buildPermittedUseFields() for the same register.
-// DOs are coloured dark green, DON'Ts dark red - inline styles rather
-// than a CSS class, since the Word export wraps this exact HTML with
-// no stylesheet of its own (see export.js), so a class wouldn't survive
-// into the exported .doc. Inline styles render correctly in the
-// on-screen preview, the PDF export and the Word export alike.
+// exported policy text.
 function permittedUseEntryHtml(row, { includeType } = {}) {
   const scopeOption = { specific: "Specific people", group: "Groups/subsets of the practice", whole: "Whole practice" }[
     row.permittedUserScope
@@ -185,16 +163,7 @@ function permittedUseEntryHtml(row, { includeType } = {}) {
   </div>`;
 }
 
-// The Permitted Use register block itself - identical shape and
-// wording in both templates, parameterized only by whether this
-// template's register includes the "Type" field (see
-// buildPermittedUseFields() above). Marked `fullWidth: true` so
-// render.js gives it the whole content width instead of the narrow
-// guidance column every other block uses - the register's entry
-// cards and preview table both need the extra room. See render.js's
-// buildLayout() for how that flag changes the on-screen layout; it
-// has no effect on the exported PDF/Word document, which is built
-// straight from render(state) regardless of on-screen layout.
+// The Permitted Use register block
 function permittedUsesBlock({ includeType }) {
   return {
     id: "permittedUses",
@@ -213,11 +182,7 @@ function permittedUsesBlock({ includeType }) {
   };
 }
 
-// Guidance copy shown next to the Permitted Use register intro. This
-// is the app's own advice to whoever's filling the form in (drawn from
-// a yellow "author's note" box that appears in both source documents,
-// worded near-identically) rather than operative policy wording, so
-// it's fine for both templates to show the same text.
+// Guidance copy shown next to the Permitted Use register intro. 
 function permittedUseIntroGuidance() {
   return `If no generative AI technologies' benefits are considered to outweigh their risks,
       or all are ruled out by ethical or other concerns, then the register below might be simply left blank.
@@ -246,10 +211,6 @@ const REPORT_CHANNEL_OPTIONS = [
   { value: "other", label: "Other" },
 ];
 
-// Resolves a choiceText field built from REPORT_CHANNEL_OPTIONS down to
-// the text that should actually be printed in the policy: the
-// Responsible Person's name, a fixed phrase, the free-text detail the
-// user typed in, or a "not yet specified" placeholder.
 function resolveChannelText(s, channelField, textField) {
   const opt = PICK(REPORT_CHANNEL_OPTIONS, s[channelField]);
   if (!opt) return "[Not yet selected]";
@@ -260,10 +221,7 @@ function resolveChannelText(s, channelField, textField) {
 
 // ------------------------------------------------------------------
 // Shared header blocks: logo / title page / practice name / date /
-// responsible person. Identical UI, identical wording, in both
-// templates - the two documents don't disagree on any of this, it's
-// entirely this app's own scaffolding around whichever policy wording
-// follows.
+// responsible person. 
 // ------------------------------------------------------------------
 
 function logoBlock() {
@@ -335,13 +293,8 @@ function responsiblePersonBlock() {
   };
 }
 
-// ------------------------------------------------------------------
-// Small fragments of policy wording that happen to be word-for-word
-// identical in both source documents.
-// ------------------------------------------------------------------
-
 // The three bullets under "Human Oversight" / "Practically, a review
-// may comprise some or all of the following:" - identical in both docs.
+// may comprise some or all of the following:"
 function reviewPracticalBulletsHtml() {
   return `<ul>
         <li>Critically reading AI generated output to catch inaccuracies/inconsistences/unwanted content/hallucinations.</li>
@@ -352,10 +305,7 @@ function reviewPracticalBulletsHtml() {
       </ul>`;
 }
 
-// The "Sustainability" section's operative wording - identical in both
-// documents (the guidance shown alongside it differs slightly between
-// templates, since the full template also mentions the Permitted Use
-// "Type" field, which the simplified template doesn't have).
+// The "Sustainability" section's operative wording
 function sustainabilityRender() {
   return `<h2>Sustainability</h2>
       <p>We commit to deciding on AI technology adoption in ways that support environmental responsibility and
@@ -366,8 +316,7 @@ function sustainabilityRender() {
       insofar as reasonably practicable.</p>`;
 }
 
-// The EU AI Act watermarking checkbox clause - identical in both
-// documents, right down to the wording of the clause it reveals.
+// The EU AI Act watermarking checkbox clause
 function euAiActWatermarkingBlock() {
   return {
     id: "euAiActWatermarking",

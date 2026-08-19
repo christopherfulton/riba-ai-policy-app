@@ -1,29 +1,7 @@
 /*
  * policyContentLite.js
  * ------------------------------------------------------------------
- * This file is a word-for-word translation of "Template Policy
- * LITE.docx" into the block structure the app renders - the
- * simplified template linked to Practice Profile 1. This is the file
- * to edit if the underlying LITE policy wording changes. See
- * js/policyContent.js for the full template's equivalent, and the
- * comment at the top of js/policyContentShared.js for what's shared
- * between the two and why.
- *
- * Unlike the full template, this document leads with the "Permitted
- * Use" register, and only afterwards sets out the framework for
- * decision-making (Responsible Person, Ethics, Human Oversight, etc).
- * The block order below follows that.
- *
- * The source document referred to "Page 1" in a couple of places
- * (paper pagination that doesn't apply to this single scrolling
- * page), and once referred to the Permitted Use list as being
- * "later in this document" - true of the full template, but not
- * this one, where it comes first. Both are adapted below, noted
- * inline with an ADAPTED comment.
- *
- * See the top of policyContent.js for the block-type reference
- * ("static", "text", "choice", "list", etc) - it applies equally here.
- * ------------------------------------------------------------------
+ * 
  */
 
 // This template's Permitted Use register has no "Type" column - see
@@ -81,7 +59,7 @@ const POLICY_BLOCKS = [
       evaluate/research/innovate on the use of AI technology by staff, but only Permitted Uses of Permitted
       Tools and Models, by Permitted Users.</p>
       <p>${rp(s)} will maintain this list and is responsible for evaluating benefits and risks associated with
-      any tool or service.</p>`, // ADAPTED: "named on Page 1" -> interpolated name
+      any tool or service.</p>`, 
   },
   permittedUsesBlock({ includeType: false }),
   {
@@ -94,7 +72,7 @@ const POLICY_BLOCKS = [
       <p>Any AI services used in the practice should be tested and evaluated in a pilot/sandbox environment to
       decide if they should be made available more widely to staff.</p>
       <p>The person with overall responsibility, and the appropriate competence, for overseeing this
-      approval/restriction process in our practice is <strong>${rp(s)}</strong>.</p>`, // ADAPTED: "named on Page 1" -> interpolated name
+      approval/restriction process in our practice is <strong>${rp(s)}</strong>.</p>`, 
   },
   {
     id: "ethicsAccountability",
@@ -137,7 +115,7 @@ const POLICY_BLOCKS = [
       by any AI technologies – any Permitted Use only applies to tasks that fall within an individual's current
       knowledge and skills, so that any AI-generated outputs can be adequately assessed.</p>
       <p>Where uncertain about a particular use, please contact the Responsible Person (${rp(s)}) before
-      implementing any AI use.</p>`, // ADAPTED: "named on page 1" -> interpolated name
+      implementing any AI use.</p>`,
   },
   {
     id: "legalCompliance",
@@ -160,7 +138,7 @@ const POLICY_BLOCKS = [
       with external AI services without seeking the Responsible Person's written approval.</p>
       <p>Examples of data you must never share with external services: client names, project details, anything
       commercially sensitive to clients or under NDA, colleagues' personal information, financial data,
-      security credentials, contract terms, internal communications…</p>`, // ADAPTED: "listed on Page 1" -> interpolated name; "later in this document" -> "earlier in this document"
+      security credentials, contract terms, internal communications…</p>`, 
   },
   {
     id: "fairnessBias",

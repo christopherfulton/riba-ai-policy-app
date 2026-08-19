@@ -14,13 +14,7 @@ const Render = (function () {
       row.dataset.blockId = block.id;
 
       if (block.fullWidth) {
-        // Spans the whole content width instead of the usual narrow
-        // guidance column: input control on top, then a labelled
-        // preview of the policy text it produces underneath. This is
-        // purely an on-screen layout choice - the exported PDF/Word
-        // document is built separately from block.render(state) (see
-        // getPolicyHtml() below) and never touches this control markup
-        // at all, full-width or not.
+        // Spans the whole content width instead of the usual narrow guidance column
         row.className = "row row-full-width";
         row.innerHTML = `
           ${buildGuidanceNote(block)}
@@ -54,7 +48,7 @@ const Render = (function () {
     return `<div class="guidance-note">${title}${text}</div>`;
   }
 
-  // Called once after buildLayout() to wire up interactive controls.
+  // Called once after buildLayout()
   function wireControls() {
     POLICY_BLOCKS.forEach((block) => {
       const el = document.getElementById("control-" + block.id);
@@ -137,10 +131,8 @@ const Render = (function () {
     });
   }
 
-  // Reads an image file chosen by the user and resizes it, entirely in the
-  // browser (FileReader + <canvas>), to a fixed height, returning a data:
-  // URL. Nothing is uploaded anywhere - the resized image is just a string
-  // that lives in AppState alongside every other answer.
+  // Reads an image file chosen by the user and resizes it to a fixed height, returning a data:
+  // URL. 
   function resizeImageFile(file, targetHeight) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -204,7 +196,6 @@ const Render = (function () {
   }
 
   // Top-level radio-buttons-plus-conditional-text-box control
-  // (e.g. "who should hallucinations be reported to?").
   function renderChoiceTextControl(block, el) {
     const state = AppState.get();
     const scope = state[block.field];
@@ -237,7 +228,6 @@ const Render = (function () {
   }
 
   // Top-level checkboxes + an "Other" checkbox that reveals a free-text box
-  // (e.g. "how do we guard against cognitive offloading?").
   function renderMultiOtherControl(block, el) {
     const state = AppState.get();
     const selected = state[block.field] || [];
@@ -274,7 +264,6 @@ const Render = (function () {
   }
 
   // Checkboxes where ticking one reveals its own free-text box
-  // (e.g. the ethical dimensions section).
   function renderMultiWithDetailsControl(block, el) {
     const state = AppState.get();
     const selected = state[block.field] || [];
@@ -312,12 +301,7 @@ const Render = (function () {
 
   // ---- Repeatable multi-field entries (e.g. the Permitted Use register) ----
 
-  // Renders the control(s) for ONE field of ONE entry. `namePrefix` -
-  // unique per entry (see callers below) - becomes the radio `name`
-  // attribute for yesno/choiceText fields, so the browser treats each
-  // one as its own mutually-exclusive group instead of leaving every
-  // radio on the page ungrouped (which let Yes and No both end up
-  // checked at once).
+  // Renders the control(s) for ONE field of ONE entry. 
   function entryFieldHtml(fd, row, namePrefix) {
     const val = row[fd.key];
     if (fd.type === "text") {
@@ -395,9 +379,7 @@ const Render = (function () {
     return "";
   }
 
-  // Wires up the control(s) for ONE field of ONE entry. Field types whose
-  // markup changes shape when toggled (multiOther, choiceText) rebuild and
-  // rewire just their own container, so the rest of the card is untouched.
+  // Wires up the control(s) for ONE field of ONE entry. 
   function wireEntryField(block, index, fd) {
     const container = document.getElementById(`entry-${block.id}-${index}-${fd.key}`);
     if (!container) return;
@@ -464,11 +446,7 @@ const Render = (function () {
     }
   }
 
-  // Fields whose control needs more than one grid column's worth of
-  // room (textareas, and anything built from a set of options) get
-  // `entry-field-wide` so they span the full row of the entry-fields
-  // grid - see .entry-fields in style.css. Short fields (a single text
-  // input, a Yes/No pair) sit side by side instead.
+  // Fields whose control needs more than one grid column's worth of room 
   const WIDE_ENTRY_FIELD_TYPES = ["textarea", "multiOther", "choiceText"];
 
   function entryCardHtml(block, row, index) {
@@ -511,9 +489,7 @@ const Render = (function () {
     });
   }
 
-  // Re-renders only the left-hand policy wording. Safe to call on
-  // every keystroke; never touches the right-hand controls, so focus
-  // and cursor position in text inputs are preserved.
+  // Re-renders only the left-hand policy wording. 
   function refreshPolicyText() {
     const state = AppState.get();
     POLICY_BLOCKS.forEach((block) => {
@@ -523,7 +499,7 @@ const Render = (function () {
   }
 
   // Returns the assembled policy text (title + all sections) as a
-  // standalone HTML string, for use by the PDF / Word export functions.
+  // standalone HTML string - used by the PDF / Word export functions.
   function getPolicyHtml() {
     const state = AppState.get();
     var innerHtml = "";
@@ -535,8 +511,6 @@ const Render = (function () {
     });
 
     return innerHtml;
-    
-    //return POLICY_BLOCKS.map((block) => block.render(state)).join("\n");
   }
 
   return { buildLayout, wireControls, refreshPolicyText, getPolicyHtml };

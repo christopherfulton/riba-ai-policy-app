@@ -1,33 +1,7 @@
 /*
  * policyContent.js
  * ------------------------------------------------------------------
- * This file is a word-for-word translation of "Template Policy.docx"
- * into the block structure the app renders. This is the file to edit
- * if the underlying policy wording changes.
- *
- * The app is built from a list of "blocks". Each block produces one
- * row on screen: policy wording on the left, guidance + an input
- * control on the right. Every block has a `render(state)` function
- * that returns the HTML to show on the left, given the current
- * answers (`state`). Use `esc()` to safely insert user-typed text.
- *
- * Shared utility functions (esc, yesNoText, rp, blankRowFor) that
- * operate on the user's answers live in policyHelpers.js, loaded
- * before this file - keeping this file focused on wording/options.
- *
- * Building blocks shared with the simplified template (see
- * js/policyContentLite.js) - the Permitted Use register, the "who
- * should this be reported to?" pattern, and the header/title blocks -
- * live in policyContentShared.js, also loaded before this file. Only
- * wording that's genuinely specific to *this* document lives below;
- * see the comment at the top of policyContentShared.js for the
- * reasoning.
- *
- * A few passages in the source document referred to "Page 1" / "page 2"
- * (paper pagination that doesn't apply to this single scrolling page).
- * Where that happened, the Responsible Person's actual name is
- * interpolated in place of the page reference instead - noted inline
- * with an ADAPTED comment below.
+ * 
  *
  * Top-level block types used below:
  *   "static"          - plain paragraph(s), no input
@@ -53,14 +27,6 @@
  * ------------------------------------------------------------------
  */
 
-// ------------------------------------------------------------------
-// OPTIONS - the checkbox/radio choices offered for each of these
-// questions. To change what a user can pick from (add, remove, reword
-// an option), edit the relevant list below. Each option's `value` is
-// the bit stored in state/saved links, so renaming a `value` on an
-// option that's already in use will orphan any previously-ticked
-// answers - change `label` freely, but treat `value` as fixed once used.
-// ------------------------------------------------------------------
 
 const ETHICAL_DIMENSION_OPTIONS = [
   { value: "environmental", label: "Environmental and sustainability issues" },
@@ -132,9 +98,7 @@ const IP_MITIGATION_OPTIONS = [
 
 // PERMITTED_USE_TYPE_OPTIONS, the entry fields/table renderer and the
 // permittedUses block itself are shared with the simplified template -
-// see policyContentShared.js. This template's register additionally
-// asks for a "Type" (matches the 12-row table at the end of the source
-// document); the simplified template's doesn't.
+// see policyContentShared.js. 
 
 // Default values for every field this policy collects.
 const DEFAULT_STATE = {
@@ -769,7 +733,7 @@ const POLICY_BLOCKS = [
       whereas others may work effectively by retaining human ownership throughout).</p>
       <p>Use of AI-enabled services designed specifically for assisting in areas of neurodiversity or
       disability (e.g. dyslexia assitance) should be considered carefully in this light, to ensure equality of opportunity for all. 
-      </p>`, // ADAPTED: "named on Page 1" -> interpolated name
+      </p>`,
   },
   permittedUsesBlock({ includeType: true }),
 ];

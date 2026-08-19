@@ -2,34 +2,17 @@
  * urlState.js
  * Encodes the form's current answers into the page's own URL (as a hash
  * fragment), so bookmarking the page - or just copying the address bar -
- * captures a snapshot that can be reopened later to carry on where you
- * left off. No file, no server, no database: the URL itself is the save.
- *
- * The hash is kept in sync automatically (debounced) via
+ * captures a snapshot that can be reopened later to carry on where user
+ * left off. 
+ * The hash is kept in sync via
  * history.replaceState, which updates the address bar without adding
  * browser-history entries or reloading the page.
- *
- * The uploaded logo is deliberately left out of the link (see
- * EXCLUDED_FIELDS below) - it can be tens of KB as base64, and keeping
- * links short and easy to share/bookmark matters more than the logo
- * surviving a restore. It just needs re-uploading after opening a link.
- *
- * The remaining JSON is deflate-compressed (via the browser's built-in
- * CompressionStream) before being base64-encoded - a fully filled-out
- * form (e.g. several Permitted Use register entries with real prose in
- * them) compresses by roughly 85-90%, since JSON's repeated field names
- * and the app's own boilerplate/guidance-shaped text compress very well.
- * Where CompressionStream isn't available (older browsers - it shipped
- * everywhere by 2023), links fall back to the old uncompressed scheme
- * under a different hash prefix, so they still work, just longer. Either
- * way, links already bookmarked under the old "#s=" prefix keep loading
- * correctly.
  */
 
 const UrlState = (function () {
   const HASH_PREFIX = "#z="; // current scheme: deflate-compressed
-  const LEGACY_HASH_PREFIX = "#s="; // old scheme: uncompressed - still read, never written (unless compression is unsupported)
-  const MAX_LENGTH = 1500000; // stay comfortably under browser URL limits
+  const LEGACY_HASH_PREFIX = "#s="; // old scheme
+  const MAX_LENGTH = 1500000; // stay under browser URL limits
   const EXCLUDED_FIELDS = ["logoDataUrl"];
   let debounceTimer = null;
   let warnedAboutSize = false;
@@ -139,7 +122,7 @@ const UrlState = (function () {
     debounceTimer = setTimeout(() => applyToUrl(state), 400);
   }
 
-  // Immediate - used right before copying the link, so it's never stale.
+  // Immediate - used right before copying the link
   function flushNow(state) {
     clearTimeout(debounceTimer);
     return applyToUrl(state);
